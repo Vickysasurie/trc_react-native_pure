@@ -90,12 +90,12 @@ apply from: "../../node_modules/react-native/react.gradle"
  * Upload all the APKs to the Play Store and people will download
  * the correct one based on the CPU architecture of their device.
  */
-def enableSeparateBuildPerCPUArchitecture = false
+//def enableSeparateBuildPerCPUArchitecture = false false-react native basic value
 
 /**
  * Run Proguard to shrink the Java bytecode in release builds.
  */
-def enableProguardInReleaseBuilds = false
+//def enableProguardInReleaseBuilds - false-react native basic value
 
 /**
  * The preferred build flavor of JavaScriptCore.
@@ -118,6 +118,8 @@ def jscFlavor = 'org.webkit:android-jsc:+'
  * and the benefits of using Hermes will therefore be sharply reduced.
  */
 def enableHermes = project.ext.react.get("enableHermes", false);
+def enableSeparateBuildPerCPUArchitecture = true
+def enableProguardInReleaseBuilds = true
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -143,6 +145,14 @@ android {
         }
     }
     signingConfigs {
+        release {
+            if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
+                storeFile file(MYAPP_UPLOAD_STORE_FILE)
+                storePassword MYAPP_UPLOAD_STORE_PASSWORD
+                keyAlias MYAPP_UPLOAD_KEY_ALIAS
+                keyPassword MYAPP_UPLOAD_KEY_PASSWORD
+            }
+        }
         debug {
             storeFile file('debug.keystore')
             storePassword 'android'
@@ -157,6 +167,7 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://facebook.github.io/react-native/docs/signed-apk-android.
+            signingConfig signingConfigs.release
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"

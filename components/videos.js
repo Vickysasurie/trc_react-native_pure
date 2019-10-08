@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { Component } from 'react';
 import { View, StyleSheet, Dimensions, Text, PixelRatio, WebView, Image, ImageBackground } from 'react-native';
 import { TabView, SceneMap } from 'react-native-tab-view';
 import { Col, Row, Grid } from "react-native-easy-grid";

@@ -1,17 +1,14 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React, { Fragment } from 'react';
 import {
   StyleSheet,
   View,
   AsyncStorage,
-  Alert
+  Alert,
+  Text,
+  TextInput,
+  FlatList,
+  Button,
+  TouchableOpacity
 } from 'react-native';
 
 import {
@@ -23,13 +20,15 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import Signin from './components/signin';
 import RouteMainPage from './components/routemain_page';
+import LoadScreen from './components/loadscreen';
 
 export default class App extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      signedIn: false
+      storevalue: false,
+      signedIn: false,
     }
     this.handler = this.handler.bind(this);
   }
@@ -40,10 +39,17 @@ export default class App extends React.Component {
 
     if (value !== null) {
       this.setState({
+        storevalue: true
+      });
+      this.setState({
         signedIn: true
       });
-      Alert.alert("Welcome back User", value.name);
-      console.log("Already signin: ", value);
+      Alert.alert("Welcome back", value.name);
+      //console.log("Already signin: ", value);
+    } else {
+      this.setState({
+        storevalue: true
+      });
     }
   }
   handler() {
@@ -56,16 +62,21 @@ export default class App extends React.Component {
   render() {
     return (
 
+
       <View style={{ flex: 1 }}>
-        {this.state.signedIn ? (
-          <RouteMainPage />
-        ) : (
-            <Signin handler1={this.handler} />
-
-          )}
-
+        {this.state.storevalue? (
+            <View style={{ flex: 1 }}>
+                {this.state.signedIn ? (
+                  <RouteMainPage />
+                  ) : (
+                    <Signin handler1={this.handler} />      
+                  )
+                }          
+                </View>
+        ):(
+            <LoadScreen />
+        )}
       </View>
-
 
     );
   }
@@ -109,5 +120,3 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
 });
-
-

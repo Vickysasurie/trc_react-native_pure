@@ -67,7 +67,7 @@ export default class App extends React.Component {
 
     render() {
         return (
-            <View >
+            <View style={{width:'100%'}}>
 
                 <BottomNavigation
                     renderTab={this.renderTab}
@@ -93,6 +93,6 @@ export default class App extends React.Component {
     }
 
     renderIcon = iconName => ({ isActive }) => {
-        return <Icon size={24} color="white" name={iconName} />
+        return <Icon  size={24} color="white" name={iconName} />
     }
 }

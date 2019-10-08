@@ -4,9 +4,11 @@ import { Card } from 'react-native-elements';
 import { BarTitle } from './bar-title';
 import { DisplayList } from './flatList';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { connect } from 'react-redux';
+import { addPlace } from '../actions/place';
 
 const { height } = Dimensions.get('window');
-export default class Home extends React.Component {
+class Home extends React.Component {
   constructor() {
     super();
 
@@ -16,17 +18,21 @@ export default class Home extends React.Component {
         'https://www.youtube.com/embed/rb8smP_xTTY'
       ],
       video_thumb: ['thumb1', 'thumb2', 'thumb3', 'thumb4', 'thumb5', 'thumb6', 'thumb7', 'thumb8', 'thumb9'],
-      screenHeight:0
+      screenHeight:0,
+      gallery:false
     };
 
   }
+
   onContentChange(contentWidth,contentHeight) {
     this.setState({screenHeight:contentHeight});
   }
 
-  handleOnPress = () => {
-    console.log('puff');
-    Alert.alert("warning")
+  selectimage() {
+    this.props.add(true);
+    this.setState({gallery:this.props.gallery});
+    this.props.navigation.navigate('GallerySwiper');
+    
   }
 
   render() {
@@ -37,9 +43,6 @@ export default class Home extends React.Component {
 
         <Image source={require('../assets/milkyway.jpg')} style={{ width: '100%', height: '100%', position: 'absolute' }} />
 
-   
-      
-     
 <ScrollView >
 
 <View style={{
@@ -84,12 +87,23 @@ export default class Home extends React.Component {
           <Text>{'\n'}</Text>
           <BarTitle leftTitle={'Latest Videos'}></BarTitle>
 
-          <DisplayList video_thumb={this.state.video_thumb}></DisplayList>
+          <DisplayList video_thumb={this.state.video_thumb} selectImage = {()=>this.selectimage()}></DisplayList>
 
           <BarTitle leftTitle={'Image Gallery'}></BarTitle>
-          <DisplayList video_thumb={this.state.video_thumb}></DisplayList>
+          
+              <DisplayList video_thumb={this.state.video_thumb} selectImage = {()=>this.selectimage()} ></DisplayList>
+          
           <BarTitle leftTitle={'Testimonial Videos'}></BarTitle>
-          <DisplayList video_thumb={this.state.video_thumb}></DisplayList>
+          <DisplayList video_thumb={this.state.video_thumb} selectImage = {()=>this.selectimage()}></DisplayList>
+
+          {/* <Gallery
+        style={{flex: 1, backgroundColor: 'black'}}
+        images={[
+          'http://p10.qhimg.com/t019e9cf51692f735be.jpg',
+          'http://ww2.sinaimg.cn/mw690/714a59a7tw1dxqkkg0cwlj.jpg',
+          'http://www.bz55.com/uploads/allimg/150122/139-150122145421.jpg'
+        ]}
+      /> */}
 
           <Card containerStyle={styles.card} >
 
@@ -130,3 +144,19 @@ const styles = StyleSheet.create({
     borderWidth:0
   }
 });
+
+const mapStateToProps = state => {
+  return {
+    gallery: state.gallery
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    add: (name) => {
+      dispatch(addPlace(name))
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home)

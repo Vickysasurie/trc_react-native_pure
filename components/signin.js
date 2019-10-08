@@ -23,6 +23,7 @@ export default class Signin extends React.Component {
   async facebookLogin() {
 
     try {
+      //LoginManager.setLoginBehavior('NATIVE_ONLY'); //for fb lite and chrome user
       let result = await LoginManager.logInWithPermissions(['public_profile','email'])
 
       if(result.isCancelled) {
@@ -71,8 +72,63 @@ export default class Signin extends React.Component {
         )
   
        }
-    } catch(error) {
-        Alert.alert('Login faile dwith error'+error);
+    } catch(nativeError) {
+         try{
+      LoginManager.setLoginBehavior('WEB_ONLY'); //for facebook application
+      let result = await LoginManager.logInWithReadPermissions(['public_profile', 'email']);
+        //Alert.alert('Login failed with error'+error);
+
+        if(result.isCancelled) {
+          Alert.alert('Login was cancelled');
+        }
+         else {
+           console.log("fb data catched for fb application",result);
+  
+           AccessToken.getCurrentAccessToken().then(
+            (data) => {
+              let accessToken = data.accessToken
+              //alert(accessToken.toString())
+  
+              const responseInfoCallback = (error, result) => {
+                if (error) {
+                  console.log(error)
+                  alert('Error fetching data: ' + error.toString());
+                } else {
+                  console.log(result);
+                  this.setState({username:result.name});
+                  this.setState({profile_pic:result.picture.data.url});
+                  result.media = 'fb';
+                  AsyncStorage.setItem('user', JSON.stringify(result));
+                  //console.log("name in state ",this.state.username);
+                  //alert('Success fetching data: ' , (result.name).toString());
+                }
+              }
+  
+              const infoRequest = new GraphRequest(
+                '/me',
+                {
+                  accessToken: accessToken,
+                  parameters: {
+                    fields: {
+                      string: 'email,name,first_name,middle_name,last_name,picture.type(large)'
+                    }
+                  }
+                },
+                responseInfoCallback
+              );
+  
+              // Start the graph request.
+              new GraphRequestManager().addRequest(infoRequest).start()
+  
+            }
+          )
+    
+         }
+
+        } catch(webError) {
+          Alert.alert("Web error");
+          console.log("Web error",webError)
+        }
     }
   }
 
@@ -84,7 +140,7 @@ export default class Signin extends React.Component {
         <Image source={require('../assets/signin_wallpaper.webp')} style={{ width: '100%', height: '100%', position: 'absolute' }} />
         <View style={{ justifyContent: "center", flex: 1 }}>
 
-          {this.state.username != null ? (
+          {(this.state.profile_pic)!= null ? (
             <View style={{ justifyContent: "center", alignItems: 'center' }}>
               <TouchableHighlight onPress={() => this.props.handler1()}>
                 <Text style={{ color: 'black', fontSize: 15, textAlign: 'center' }}> Welcome {this.state.username}!</Text>
