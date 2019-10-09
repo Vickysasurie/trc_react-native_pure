@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, Text, Image, Alert, AsyncStorage, TouchableHighlight, Button } from 'react-native';
+import { View, StyleSheet, Text, Image, Alert, TouchableHighlight, Button } from 'react-native';
 import { Card } from 'react-native-elements';
 import {
   LoginManager,
@@ -7,7 +7,7 @@ import {
   GraphRequest,
   GraphRequestManager,
 } from 'react-native-fbsdk';
-
+import  AsyncStorage  from '@react-native-community/async-storage';
 
 export default class Signin extends React.Component {
 
@@ -37,7 +37,7 @@ export default class Signin extends React.Component {
             let accessToken = data.accessToken
             //alert(accessToken.toString())
 
-            const responseInfoCallback = (error, result) => {
+             const responseInfoCallback = (error, result) => {
               if (error) {
                 console.log(error)
                 alert('Error fetching data: ' + error.toString());
@@ -46,7 +46,7 @@ export default class Signin extends React.Component {
                 this.setState({username:result.name});
                 this.setState({profile_pic:result.picture.data.url});
                 result.media = 'fb';
-                AsyncStorage.setItem('user', JSON.stringify(result));
+                 AsyncStorage.setItem('user', JSON.stringify(result));
                 //console.log("name in state ",this.state.username);
                 //alert('Success fetching data: ' , (result.name).toString());
               }

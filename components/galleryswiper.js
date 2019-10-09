@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Dimensions } from 'react-native';
+import { View, Dimensions, StatusBar } from 'react-native';
 import GallerySwiper from "react-native-gallery-swiper";
 import Orientation from 'react-native-orientation';
 import { connect } from 'react-redux';
@@ -17,23 +17,15 @@ class GallerySwipe extends React.Component {
 
     componentDidMount() {
         Orientation.lockToLandscape();
-        console.log("gallery screen ",this.state.screen);
-        console.log("gallery value @ swiper ",this.props.gallery);
-        this.getOrientation1();
+        StatusBar.setHidden(true);
     }
+    
     componentWillUnmount() {
-        Orientation.lockToPortrait();
         this.props.add(this.state.gallery);
-        this.getOrientation1();
+        Orientation.lockToPortrait();
+        StatusBar.setHidden(false);
     }
-    getOrientation1(){
-        //Orientation.addOrientationListener();
-        Orientation.getOrientation((err, orientation) => {
-          console.log(`Current Device Orientation gallery: ${orientation}`);
-        });
-        console.log(this.state.screen);
 
-    }
     render() {
         return(
             <View style={{flex:1}} >

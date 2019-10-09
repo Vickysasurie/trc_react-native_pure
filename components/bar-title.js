@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 
 export class BarTitle extends React.Component {
 
@@ -15,7 +15,10 @@ export class BarTitle extends React.Component {
         return(
             <View style={{ height: 40, backgroundColor: '#005bb0',textAlign:'justify', flexDirection: 'row', justifyContent: 'space-between' }} >
                 <Text style={{ textAlign: 'left', color: 'white',padding:10 }}>{this.props.leftTitle}</Text>
+              <TouchableOpacity >
                 <Text style={{ textAlign: 'right', color: 'white',padding:10 }}>{this.state.rightTitle}</Text>
+              </TouchableOpacity>
+                
             </View>
         );
     }

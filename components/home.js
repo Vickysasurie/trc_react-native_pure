@@ -21,7 +21,8 @@ class Home extends React.Component {
       screenHeight:0,
       gallery:false
     };
-
+    //this.selectimage = this.selectimage.bind(this);
+    //this.handler = this.handler.bind(this);
   }
 
   onContentChange(contentWidth,contentHeight) {
@@ -31,9 +32,12 @@ class Home extends React.Component {
   selectimage() {
     this.props.add(true);
     this.setState({gallery:this.props.gallery});
-    this.props.navigation.navigate('GallerySwiper');
-    
+    this.props.navigation.navigate('GallerySwiper'); 
   }
+  // handler() {
+  //   //Alert.alert('bar click');
+  //   this.selectimage();
+  // }
 
   render() {
 
@@ -74,26 +78,32 @@ class Home extends React.Component {
             </TouchableOpacity>
           </Card>
 
-          <Card containerStyle={{ backgroundColor: 'transparent', minHeight: 120, backgroundColor: 'rgba(230, 230, 230, 0.4)',borderWidth:0 }}>
+          <Card containerStyle={{ backgroundColor: 'transparent', backgroundColor: 'rgba(230, 230, 230, 0.4)',borderWidth:0 }}>
 
 
             <TouchableOpacity style={{ flex: 1, flexDirection: 'row' }} onPress={() => this.props.navigation.navigate('Events')}>
-              <Image source={require('../assets/seminar.png')} style={{ width: '40%', height: '100%' }} />
-              <Text style={{ color: 'white', width: '60%', height: '100%', textAlign: 'right' }}>7-Day Experimental Program 23/Sep/2019 to 29/Sep/2019 Amsam Mahali Nenmeli Chengalpattu-603002 </Text>
+              <View style={{flexBasis:'50%'}}>
+                  <Image source={require('../assets/seminar.png')}  />
+              </View>
+              
+              <View style={{flexBasis:'50%'}}>
+                  <Text style={{ color: 'white', textAlign: 'left', fontSize:15 }}>7-Day Experimental Program 23/Sep/2019 to 29/Sep/2019 Amsam Mahali Nenmeli Chengalpattu-603002 </Text>
+              </View>
+              
             </TouchableOpacity>
 
 
           </Card>
           <Text>{'\n'}</Text>
-          <BarTitle leftTitle={'Latest Videos'}></BarTitle>
+          <BarTitle leftTitle={'Latest Videos'} ></BarTitle>
 
           <DisplayList video_thumb={this.state.video_thumb} selectImage = {()=>this.selectimage()}></DisplayList>
 
           <BarTitle leftTitle={'Image Gallery'}></BarTitle>
           
-              <DisplayList video_thumb={this.state.video_thumb} selectImage = {()=>this.selectimage()} ></DisplayList>
+          <DisplayList video_thumb={this.state.video_thumb} selectImage = {()=>this.selectimage()} ></DisplayList>
           
-          <BarTitle leftTitle={'Testimonial Videos'}></BarTitle>
+          <BarTitle leftTitle={'Testimonial Videos'} ></BarTitle>
           <DisplayList video_thumb={this.state.video_thumb} selectImage = {()=>this.selectimage()}></DisplayList>
 
           {/* <Gallery
@@ -110,19 +120,31 @@ class Home extends React.Component {
           <Text style={{textAlign: 'center',color:'white',fontWeight:'bold'}}>True Realization Centre</Text>
           <Text style={{textAlign: 'center',color:'white'}}> No 80A Als Nagar, Madambakkam, Chennai Tamil Nadu, 600073 {'\n'} +91 9841077467 support@truerealizationcenter.org  </Text>
 
-            <View style = {{flex:1, flexDirection:'row',justifyContent:'center'}}>
+            <View style = {{flex:1, flexDirection:'row',justifyContent:'space-evenly', alignItems:'center'}}>
+            <View style={{flexBasis:'20%'}}>
+              </View>
+              <View style={{flexBasis:'15%'}}>
                 <TouchableOpacity onPress = {()=> Linking.openURL('http://www.truerealizationcentre.org/')}>
                     <Icon size={30} color="white" name= "earth" />
                 </TouchableOpacity>
+              </View>
+              <View style={{flexBasis:'15%'}}>
                 <TouchableOpacity onPress = {()=> Linking.openURL('https://wa.me/919841077467')}>
                     <Icon size={30} color="white" name= "whatsapp" />
                 </TouchableOpacity>
+              </View>
+              <View style={{flexBasis:'15%'}}>
                 <TouchableOpacity onPress = {()=> Linking.openURL('https://m.facebook.com/True-Realization-Centre-INDIA-741183079408942')}>
                     <Icon size={30} color="white" name= "facebook-box" />
                 </TouchableOpacity>
+              </View>
+              <View style={{flexBasis:'15%'}}>
                 <TouchableOpacity onPress = {()=> Linking.openURL('https://www.youtube.com/channel/UClYMSQ8dL2gqjHpShV7aTKQ')}>
                     <Icon size={30} color="white" name= "youtube" />
                 </TouchableOpacity>
+              </View>
+              <View style={{flexBasis:'20%'}}>
+              </View>
             </View>
             
           </Card>
@@ -142,7 +164,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     backgroundColor: 'rgba(230, 230, 230, 0.4)',
     borderWidth:0
-  }
+  },
+
 });
 
 const mapStateToProps = state => {

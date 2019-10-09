@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import {  createAppContainer, createStackNavigator } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-import LoadScreen from './loadscreen';
+//import LoadScreen from './loadscreen';
 import HomeScreen from './home';
-import BottomNav from './bottom-nav';
+//import BottomNav from './bottom-nav';
 import Videos from './videos';
 import VideoPreview from './video-preview';
 import TRC from './trc';
@@ -26,16 +26,36 @@ const VideoScreenStack = createStackNavigator({
   VideoPreview: {
     screen: VideoPreview,
     navigationOptions: {
-      header: null,
-
+      title:'Video Details',
+      headerStyle: {
+        backgroundColor: '#a9b09e',
+      },
     }
   },
 
 }, {
   initialRoute: 'Videos',
-})
+  
+});
 
-const QuoteScreenStack = createStackNavigator({
+VideoScreenStack.navigationOptions = ({ navigation }) => {
+  let tabBarVisible;
+   if (navigation.state.routes.length > 1) {
+ navigation.state.routes.map(route => {
+   if (route.routeName === "VideoPreview") {
+     tabBarVisible = false;
+   } else {
+     tabBarVisible = true;
+   }
+ });
+  }
+ 
+  return {
+    tabBarVisible
+  };
+ };
+
+const HomeScreenStack = createStackNavigator({
   Home: {
     screen: HomeScreen,
     navigationOptions: {
@@ -46,29 +66,48 @@ const QuoteScreenStack = createStackNavigator({
   QuotePreview: {
     screen: QuotePreview,
     navigationOptions: {
-      header: null,
-
+      //header: null,
+      title:'Daily Quotes',
+      headerStyle: {
+        backgroundColor: '#a9b09e',
+      },
     }
   },
   GallerySwiper: {
     screen: GallerySwipe,
     navigationOptions: {
-      //header: null,
-      //headerLeft: null,
-      title:'Gallery',
-      headerStyle: {
-        backgroundColor: '#a9b09e',
-      },
+      header:null,
+      // title:'Gallery',
+      // headerStyle: {
+      //   backgroundColor: '#a9b09e',
+      // },
     }
   },
 }, {
   initialRoute: 'Home',
 })
 
+HomeScreenStack.navigationOptions = ({ navigation }) => {
+  let tabBarVisible;
+   if (navigation.state.routes.length > 1) {
+ navigation.state.routes.map(route => {
+   if ( (route.routeName === "QuotePreview") || (route.routeName === "GallerySwiper")) {
+     tabBarVisible = false;
+   } else {
+     tabBarVisible = true;
+   }
+ });
+  }
+ 
+  return {
+    tabBarVisible
+  };
+ };
+
 const RootStack = createBottomTabNavigator(
   {
     Home: {
-      screen: QuoteScreenStack,
+      screen: HomeScreenStack,
       navigationOptions: {
         header: null,
         headerLeft: null,

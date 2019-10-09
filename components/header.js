@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {Header, Avatar} from 'react-native-elements';
 import bg from '../assets/avatar.jpg';
-import { AsyncStorage, Alert } from 'react-native';
-
+import { Alert } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 export default class HEADER extends React.Component {
 
   constructor(props) {
@@ -12,6 +12,9 @@ export default class HEADER extends React.Component {
       chief_logo:'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg'
     }
   }
+  componentWillUpdate() {
+    console.log('inside header');
+  }
   componentDidMount() {
     this.retrieveData();
   }
@@ -20,8 +23,6 @@ export default class HEADER extends React.Component {
       const data = await AsyncStorage.getItem('user');
       const value = JSON.parse(data);
       if (value !== null) {
-        // We have data!!
-        //Alert.alert("hai result here",value.name);
         console.log("after signin data",value);
         if(value.media === "fb") {
           var logo = value.picture.data.url;
@@ -47,8 +48,7 @@ export default class HEADER extends React.Component {
       centerComponent={{ text: 'True Realization Center', style: { color: '#fff' } }}
       rightComponent={<Avatar
         rounded
-        source={{
-          
+        source={{     
           uri:this.state.chief_logo,
         }}
       />}

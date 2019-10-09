@@ -2,15 +2,9 @@ import React, { Fragment } from 'react';
 import {
   StyleSheet,
   View,
-  AsyncStorage,
   Alert,
-  Text,
-  TextInput,
-  FlatList,
-  Button,
-  TouchableOpacity
 } from 'react-native';
-
+import  AsyncStorage  from '@react-native-community/async-storage';
 import {
   Header,
   LearnMoreLinks,
@@ -32,6 +26,7 @@ export default class App extends React.Component {
     }
     this.handler = this.handler.bind(this);
   }
+
 
   async componentDidMount() {
     const data = await AsyncStorage.getItem('user');

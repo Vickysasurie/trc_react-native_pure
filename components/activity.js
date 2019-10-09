@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text,ImageBackground, TouchableOpacity, AsyncStorage } from 'react-native'
+import { View, Text,ImageBackground, TouchableOpacity } from 'react-native'
 import {
   LoginManager,
   AccessToken,
   GraphRequest,
   GraphRequestManager,
 } from 'react-native-fbsdk';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class ACTIVITY extends React.Component {
 

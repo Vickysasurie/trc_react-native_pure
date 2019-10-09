@@ -13,36 +13,33 @@ class RouteMainPage extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      gallery: this.props.gallery || false,
+      gallery: false,
       screen: Dimensions.get('window'),
     }
 
   }
+  componentDidMount() {
+    console.log(this.props.gallery);
+  }
 
-  componentWillUpdate() {
-    console.log("condition" + (this.state.gallery != true), "props", this.props.gallery);
-    //this.setState({gallery:true});
+  componentDidUpdate() {
     if (this.props.gallery.gallery === true) {
-      console.log("inside", this.props.gallery);
       if (this.state.gallery != true) {
         this.setState({ gallery: true });
       }
     } else {
-      console.log("condition @ else" + (this.state.gallery != true));
       this.setState({ gallery: false });
-
     }
-
   }
 
 
   render() {
     return (
       <View style={{ flex: 1 }} >
-
-        
+        {this.state.gallery === false? (
           <Header />
-  
+        ):[]}
+          
          <AppContainer />
 
       </View>

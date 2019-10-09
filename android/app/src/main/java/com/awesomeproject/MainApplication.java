@@ -12,8 +12,6 @@ import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 
 import java.util.List;
-  // <--- import for react-native-google-signin
-import co.apptailor.googlesignin.RNGoogleSigninPackage;
 
 // import com.facebook.FacebookSDK;//fbsdk react native
 // import com.facebook.reactnative.androidsdk.FBSDKPackage;//fbsdk react native
@@ -50,17 +48,6 @@ public class MainApplication extends Application implements ReactApplication {
       return "index";
     }
   };
-
-
-    // start of react-native-google-signin
-    // @Override
-    // protected List<ReactPackage> getPackages() {
-    //   return Arrays.<ReactPackage>asList(
-    //       new MainReactPackage(),
-    //       new RNGoogleSigninPackage() // <-- this needs to be in the list
-    //   );
-    // }
-  // end of react-native-google-signin
 
   @Override
   public ReactNativeHost getReactNativeHost() {
