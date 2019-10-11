@@ -123,6 +123,7 @@ def enableProguardInReleaseBuilds = true
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
+    //--> added for google firebase
   dexOptions {
     javaMaxHeapSize "4g"
     }
@@ -137,7 +138,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
-        multiDexEnabled true
+        multiDexEnabled true  //--> added for google firebase
     }
 
     splits {
@@ -205,12 +206,12 @@ android {
 dependencies {
 
   // Add the Firebase SDK for Google Analytics
-  implementation 'com.google.firebase:firebase-analytics:17.2.0'
+  implementation 'com.google.firebase:firebase-analytics:17.2.0'//--> added for google firebase
 
   // Add the SDKs for any other Firebase products you want to use in your app
   // For example, to use Firebase Authentication and Cloud Firestore
-  implementation 'com.google.firebase:firebase-auth:19.1.0'
-  implementation 'com.google.firebase:firebase-firestore:21.1.1'
+  implementation 'com.google.firebase:firebase-auth:19.1.0'//--> added for google firebase
+  implementation 'com.google.firebase:firebase-firestore:21.1.1'//--> added for google firebase
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules

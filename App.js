@@ -21,8 +21,8 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      storevalue: false,
-      signedIn: false,
+      storevalue: true,
+      signedIn: true,
     }
     this.handler = this.handler.bind(this);
   }
@@ -39,7 +39,7 @@ export default class App extends React.Component {
       this.setState({
         signedIn: true
       });
-      Alert.alert("Welcome back", value.name);
+      //Alert.alert("Welcome back", value.name);
       //console.log("Already signin: ", value);
     } else {
       this.setState({

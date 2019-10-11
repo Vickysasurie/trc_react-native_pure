@@ -7,11 +7,59 @@ import {
   GraphRequestManager,
 } from 'react-native-fbsdk';
 import AsyncStorage from '@react-native-community/async-storage';
+import firebase, { Notification, RemoteMessage } from 'react-native-firebase';
 
 export default class ACTIVITY extends React.Component {
 
   constructor(props) {
     super(props);
+  }
+  async componentDidMount() {
+    // console.log("hai from activity");
+    // if (Platform.OS === 'android') {
+    //   try {
+    //     const res = await firebase.messaging().requestPermission();
+    //     const fcmToken = await firebase.messaging().getToken();
+    //     console.log("hai from activity",fcmToken);
+    //     if (fcmToken) {
+    //       console.log("hai from activity",fcmToken);
+    //       logger.log('FCM Token: ', fcmToken);
+    //       const enabled = await firebase.messaging().hasPermission();
+    //       if (enabled) {
+    //         logger.log('FCM messaging has permission:' + enabled)
+    //       } else {
+    //         try {
+    //           await firebase.messaging().requestPermission();
+    //           logger.log('FCM permission granted')
+    //         } catch (error) {
+    //           logger.log('FCM Permission Error', error);
+    //         }
+    //       }
+    //       firebase.notifications().onNotificationDisplayed((notification: Notification) => {
+    //         // Process your notification as required
+    //         // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
+    //         logger.log('Notification: ', notification)
+    //       });
+    //       this.notificationListener = firebase.notifications().onNotification((notification: Notification) => {
+    //         logger.log('Notification: ', notification)
+    //       });
+    //     } else {
+    //       logger.log('FCM Token not available');
+    //     }
+    //   } catch (e) {
+    //     logger.log('Error initializing FCM', e);
+    //   }
+    // }
+    this.checkPermission();
+  }
+
+  checkPermission = async () => {
+    const enabled = await firebase.messaging().hasPermission();
+    if (enabled) {
+        this.getFcmToken();
+    } else {
+        this.requestPermission();
+    }
   }
  
   logout() {
