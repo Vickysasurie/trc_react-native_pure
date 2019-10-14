@@ -220,6 +220,11 @@ dependencies {
     implementation "com.android.support:appcompat-v7:23.0.1"
     implementation 'com.android.support:design:27.1.0'
 
+    implementation "com.google.android.gms:play-services-base:16.1.0"
+    implementation "com.google.firebase:firebase-core:17.0.1"
+    implementation "com.google.firebase:firebase-messaging:19.0.1"
+    implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
+
     if (enableHermes) {
       def hermesPath = "../../node_modules/hermesvm/android/";
       debugImplementation files(hermesPath + "hermes-debug.aar")

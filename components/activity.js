@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { View, Text,ImageBackground, TouchableOpacity } from 'react-native'
+import React, {Fragment,useEffect} from 'react';
+import { View, Text,ImageBackground, TouchableOpacity, Alert } from 'react-native'
 import {
   LoginManager,
   AccessToken,
@@ -8,58 +8,88 @@ import {
 } from 'react-native-fbsdk';
 import AsyncStorage from '@react-native-community/async-storage';
 import firebase, { Notification, RemoteMessage } from 'react-native-firebase';
+import firebaseClient from "./FireBaseClient";
 
 export default class ACTIVITY extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      token: ''
+    }
   }
-  async componentDidMount() {
-    // console.log("hai from activity");
-    // if (Platform.OS === 'android') {
-    //   try {
-    //     const res = await firebase.messaging().requestPermission();
-    //     const fcmToken = await firebase.messaging().getToken();
-    //     console.log("hai from activity",fcmToken);
-    //     if (fcmToken) {
-    //       console.log("hai from activity",fcmToken);
-    //       logger.log('FCM Token: ', fcmToken);
-    //       const enabled = await firebase.messaging().hasPermission();
-    //       if (enabled) {
-    //         logger.log('FCM messaging has permission:' + enabled)
-    //       } else {
-    //         try {
-    //           await firebase.messaging().requestPermission();
-    //           logger.log('FCM permission granted')
-    //         } catch (error) {
-    //           logger.log('FCM Permission Error', error);
-    //         }
-    //       }
-    //       firebase.notifications().onNotificationDisplayed((notification: Notification) => {
-    //         // Process your notification as required
-    //         // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
-    //         logger.log('Notification: ', notification)
-    //       });
-    //       this.notificationListener = firebase.notifications().onNotification((notification: Notification) => {
-    //         logger.log('Notification: ', notification)
-    //       });
-    //     } else {
-    //       logger.log('FCM Token not available');
-    //     }
-    //   } catch (e) {
-    //     logger.log('Error initializing FCM', e);
-    //   }
-    // }
+   componentDidMount() {
+
     this.checkPermission();
+
   }
 
+
   checkPermission = async () => {
+    console.log('inside activity');
     const enabled = await firebase.messaging().hasPermission();
     if (enabled) {
         this.getFcmToken();
     } else {
         this.requestPermission();
     }
+  }
+  getFcmToken = async () => {
+    const fcmToken = await firebase.messaging().getToken();
+    if (fcmToken) {
+      console.log('Your Firebase Token is: ', fcmToken);
+      this.setState({token:fcmToken});
+      this.messageListener();
+      //this.showAlert('Your Firebase Token is:', fcmToken);
+    } else {
+      this.showAlert('Failed', 'No token received');
+    }
+  }
+  requestPermission = async () => {
+    try {
+      await firebase.messaging().requestPermission();
+      // User has authorised
+    } catch (error) {
+        // User has rejected permissions
+    }
+  }
+  messageListener = async () => {
+    this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen) => {
+      console.log("notification open", notificationOpen)
+      const { title, body } = notificationOpen.notification;
+      this.showAlert(title, body);
+  });
+    // inside the app it will show notification
+    this.notificationListener = firebase.notifications().onNotification((notification) => {
+        const { title, body } = notification;
+        this.showAlert(title, body);
+        console.log("nofitification listener", notification);
+    });
+  
+    const notificationOpen = await firebase.notifications().getInitialNotification();
+    if (notificationOpen) {
+      console.log("nofitification opened", notificationOpen);
+        const { title, body } = notificationOpen.notification;
+          this.showAlert(title, body);
+    }
+  
+    // this.messageListener = firebase.messaging().onMessage((message) => {
+    //   console.log(JSON.stringify(message));
+    //   this.showAlert(title, body);
+    // });
+  }
+  componentWillUnmount() {
+    this.notificationOpenedListener();
+}
+  showAlert = (title, message) => {
+    Alert.alert(
+      title,
+      message,
+      [
+        {text: 'OK', onPress: () => console.log('OK Pressed')},
+      ],
+      {cancelable: false},
+    );
   }
  
   logout() {
@@ -85,7 +115,26 @@ export default class ACTIVITY extends React.Component {
   };
 })
     console.log("logout success");
+    Alert.alert("Logout success");
     AsyncStorage.removeItem('user');
+  }
+
+  sendRemoteNotification(token) {
+    let body;
+      body = {
+        to: token,
+        notification: {
+          title: "Simple FCM Client",
+          body: "Click me to go to detail",
+          sound: "default"
+        },
+        data: {
+          targetScreen: 'Home'
+        },
+        priority: 10
+      };
+
+    firebaseClient.send(JSON.stringify(body), "notification");
   }
 
   render() {
@@ -98,6 +147,12 @@ export default class ACTIVITY extends React.Component {
          <TouchableOpacity onPress = {()=>this.logout()}>
             <Text style={{color:'white',fontSize:15,textAlign:'center',textAlignVertical:'center'}}>Logout</Text>
          </TouchableOpacity>
+         <TouchableOpacity
+            onPress={() => this.sendRemoteNotification(this.state.token)}
+            
+          >
+            <Text style={{color:'white',fontSize:15,textAlign:'center',textAlignVertical:'center'}}>Send Remote Data</Text>
+          </TouchableOpacity>
         </ImageBackground>
       </View>
     );

@@ -13,6 +13,8 @@ import com.facebook.soloader.SoLoader;
 
 import java.util.List;
 
+import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
+import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 // import com.facebook.FacebookSDK;//fbsdk react native
 // import com.facebook.reactnative.androidsdk.FBSDKPackage;//fbsdk react native
 // import com.facebook.CallbackManager;
@@ -39,6 +41,8 @@ public class MainApplication extends Application implements ReactApplication {
       // packages.add(new MyReactNativePackage());
       
       //packages.add(new FBSDKPackage(mCallbackManager)); //fbsdk react native
+      packages.add(new RNFirebaseMessagingPackage());
+      packages.add(new RNFirebaseNotificationsPackage());
       return packages;
     }
 
