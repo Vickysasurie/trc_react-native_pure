@@ -211,6 +211,13 @@ export default class Videos extends React.Component {
 
     );
   }
+  // render() {
+  //   return(
+  //     <View>
+  //           <Text>Hai machan</Text>  
+  //     </View>
+  //   )
+  // }
 }
 
 

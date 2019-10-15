@@ -49,10 +49,14 @@ export default class AssetExample extends React.Component {
           source={require('../assets/milkyway.jpg')}
           style={{ width: '100%', height: '100%' }}>
 
-          <Image
-            source={require('../assets/16431.jpg')}
-            style={{ width: '100%', height: '40%' }}
-          />
+ <View style={{
+      marginBottom: 2,
+        width: "90%",
+        height: 150,
+        margin:15
+        }}>
+        <Image source={require('../assets/16431.jpg')} style={{ width: '100%',height:"100%", position: 'relative' }} />  
+      </View>   
           <ScrollView>
             <Text style={styles.contentstyle}>
               <Text>{this.state.content}</Text>
