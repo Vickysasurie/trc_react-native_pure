@@ -179,7 +179,7 @@ const RootStack = createBottomTabNavigator(
 
   },
   {
-    initialRouteName: 'Activity',
+    initialRouteName: 'Home',
     order:['Home', 'TRC', 'Events', 'Videos', 'Activity', 'More'],
     tabBarOptions: {
       

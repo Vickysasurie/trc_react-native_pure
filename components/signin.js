@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, Text, Image, Alert, TouchableHighlight, Button } from 'react-native';
+import { View, StyleSheet, Text, Image, Alert, Button, TouchableOpacity } from 'react-native';
 import { Card } from 'react-native-elements';
 import {
   LoginManager,
@@ -8,6 +8,7 @@ import {
   GraphRequestManager,
 } from 'react-native-fbsdk';
 import  AsyncStorage  from '@react-native-community/async-storage';
+import firebase, { Notification, RemoteMessage } from 'react-native-firebase';
 
 export default class Signin extends React.Component {
 
@@ -15,9 +16,93 @@ export default class Signin extends React.Component {
     super(props);
     this.state = {
       username: null,
-      profile_pic: null
+      profile_pic: null,
+      token: null
     }
     this.facebookLogin = this.facebookLogin.bind(this);
+    this.checkPermission = this.checkPermission.bind(this);
+    this.messageListener = this.messageListener.bind(this);
+  }
+
+  sendUserToken(userdata) {
+    fetch('https://truerealizationcenter--vikidude.repl.co', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        'FCM token': this.state.token,
+        'User data':userdata
+        
+      }),
+    });
+  }
+
+  checkPermission = async () => {
+    console.log('inside activity');
+    const enabled = await firebase.messaging().hasPermission();
+    if (enabled) {
+        this.getFcmToken();
+    } else {
+        this.requestPermission();
+    }
+  }
+  getFcmToken = async () => {
+    const fcmToken = await firebase.messaging().getToken();
+    if (fcmToken) {
+      console.log('Your Firebase Token is: ', fcmToken);
+      this.setState({token:fcmToken});
+    } else {
+      this.showAlert('Failed', 'No token received');
+    }
+  }
+  requestPermission = async () => {
+    try {
+      await firebase.messaging().requestPermission();
+      // User has authorised
+    } catch (error) {
+        // User has rejected permissions
+    }
+  }
+  messageListener = async () => {
+    // inside the app it will show notification
+    this.notificationListener = firebase.notifications().onNotification((notification) => {
+        const { title, body } = notification;
+        this.showAlert(title, body);
+        console.log("nofitification listener", notification);
+    });
+  
+    this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen) => {
+      console.log("notification open", notificationOpen)
+      const { title, body } = notificationOpen.notification;
+      this.showAlert(title, body);
+  });
+  
+    // const notificationOpen = await firebase.notifications().getInitialNotification();
+    // if (notificationOpen) {
+    //   console.log("nofitification opened", notificationOpen);
+    //     const { title, body } = notificationOpen.notification;
+    //       this.showAlert(title, body);
+    // }
+  
+    // this.messageListener = firebase.messaging().onMessage((message) => {
+    //   console.log(JSON.stringify(message));
+    //   this.showAlert(title, body);
+    // });
+
+  }
+  
+  showAlert = (title, message) => {
+    
+    Alert.alert(
+      title,
+      message,
+      [
+        {text: 'OK', onPress: () => console.log('OK Pressed')},
+      ],
+      {cancelable: false},
+    );
   }
 
   async facebookLogin() {
@@ -46,9 +131,8 @@ export default class Signin extends React.Component {
                 this.setState({username:result.name});
                 this.setState({profile_pic:result.picture.data.url});
                 result.media = 'fb';
-                 AsyncStorage.setItem('user', JSON.stringify(result));
-                //console.log("name in state ",this.state.username);
-                //alert('Success fetching data: ' , (result.name).toString());
+                AsyncStorage.setItem('user', JSON.stringify(result));
+                this.sendUserToken(JSON.stringify(result));
               }
             }
 
@@ -99,8 +183,7 @@ export default class Signin extends React.Component {
                   this.setState({profile_pic:result.picture.data.url});
                   result.media = 'fb';
                   AsyncStorage.setItem('user', JSON.stringify(result));
-                  //console.log("name in state ",this.state.username);
-                  //alert('Success fetching data: ' , (result.name).toString());
+                  this.sendUserToken(JSON.stringify(result));
                 }
               }
   
@@ -131,7 +214,10 @@ export default class Signin extends React.Component {
         }
     }
   }
-
+  async componentDidMount() {
+    this.checkPermission();
+    this.messageListener();
+  }
   render() {
 
     return (
@@ -142,9 +228,9 @@ export default class Signin extends React.Component {
 
           {(this.state.profile_pic)!= null ? (
             <View style={{ justifyContent: "center", alignItems: 'center' }}>
-              <TouchableHighlight onPress={() => this.props.handler1()}>
+              <TouchableOpacity onPress={() => this.props.handler1()}>
                 <Text style={{ color: 'black', fontSize: 15, textAlign: 'center' }}> Welcome {this.state.username}!</Text>
-              </TouchableHighlight>
+              </TouchableOpacity>
               <Image source={{ uri: this.state.profile_pic }} style={{ width: 200, height: 200, borderRadius: 80 }} />
             
             </View>

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { View, Dimensions, StatusBar } from 'react-native';
 import GallerySwiper from "react-native-gallery-swiper";
-import Orientation from 'react-native-orientation';
 import { connect } from 'react-redux';
 import { addPlace } from '../actions/place';
+
 
 class GallerySwipe extends React.Component {
 
@@ -16,13 +16,11 @@ class GallerySwipe extends React.Component {
     }
 
     componentDidMount() {
-        Orientation.lockToLandscape();
         StatusBar.setHidden(true);
     }
     
     componentWillUnmount() {
         this.props.add(this.state.gallery);
-        Orientation.lockToPortrait();
         StatusBar.setHidden(false);
     }
 

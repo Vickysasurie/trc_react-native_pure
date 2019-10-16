@@ -9,7 +9,7 @@ export default class HEADER extends React.Component {
     super(props);
     this.state = {
       avatar: require("../assets/chief_logo.png"),
-      chief_logo:'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg'
+      chief_logo:'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
     }
   }
   componentWillUpdate() {
@@ -44,7 +44,12 @@ export default class HEADER extends React.Component {
     return (
       <Header
       statusBarProps={{ barStyle: 'light-content' }}
-      leftComponent={{ icon: 'star', color: '#fff' }}
+      leftComponent={ <Avatar
+        rounded
+        source={
+          require("../assets/chief_logo.png")
+        }
+      /> }
       centerComponent={{ text: 'True Realization Center', style: { color: '#fff' } }}
       rightComponent={<Avatar
         rounded
